@@ -44,8 +44,7 @@ class FastaEntry:
         denominator.
 
         Args:
-            other (FastaEntry): The other FastaEntry object to compare
-                                with.
+            other (FastaEntry): The other FastaEntry object to compare with.
 
         Returns:
             float: The normalized Hamming distance (0.0 to 1.0).
@@ -162,14 +161,14 @@ def main(args):
     Reads a Multi-FASTA file, processes the entries, computes pairwise
     Hamming distances, and writes output to a TSV file.
     """
-    # 1 & 3 & 4. Parse the Multi-FASTA file
+    # Parse the Multi-FASTA file
     entries = read_fasta(args.input, force_compressed=args.compressed)
 
     if not entries:
         print("Error: Input file is empty or formatted incorrectly.")
         return
 
-    # 2. Compute pairwise distances and write to TSV
+    # Compute pairwise distances and write to TSV
     with open(args.output, 'w') as outfile:
 
         # Using itertools.combinations to generate all unique pairs
