@@ -1,9 +1,10 @@
+"""Standalone Task Exercise 3"""
 import argparse
 import gzip
 import os
 
 __author__ = "Falk, 8819989"
-__version__ = "0.5.0"
+__version__ = "1.0.0"
 
 
 class FastaEntry:
@@ -123,10 +124,10 @@ def rabin_karp_search(
         text: str, pattern: str, max_mismatches: int
 ) -> list[int]:
     """
-    Uses the Rabin-Karp (rolling hash) algorithm for pattern matching.
+    Uses the Rabin-Karp algorithm for pattern matching.
 
-    Note: A rolling hash effectively accelerates *exact* matching.
-    If mismatches are allowed, the hash check is bypassed and it evaluates
+    A rolling hash effectively accelerates exact matching.
+    If mismatches are allowed, the hash check is bypassed and evaluates
     windows directly to accommodate approximate matches.
 
     Args:
@@ -148,7 +149,7 @@ def rabin_karp_search(
     q = 1000000007  # A large prime number
     h = 1
 
-    # Calculate h = pow(d, m-1) % q
+    # Calculate h = pow(d, m - 1) % q
     for _ in range(m - 1):
         h = (h * d) % q
 
@@ -161,8 +162,8 @@ def rabin_karp_search(
         t_hash = (d * t_hash + ord(text[i])) % q
 
     for i in range(n - m + 1):
-        # If max_mismatches is 0, we can use the hash as a fast filter.
-        # Otherwise, we evaluate to handle the requested mismatches.
+        # If max_mismatches is 0 use the hash as a fast filter.
+        # Otherwise, evaluate to handle the requested mismatches.
         if max_mismatches > 0 or p_hash == t_hash:
             mismatches = 0
             for j in range(m):
@@ -189,7 +190,7 @@ class SuffixTrieNode:
     def __init__(self):
         # Dictionary mapping a character to a child SuffixTrieNode
         self.children = {}
-        # Stores the starting positions of all suffixes passing through this node
+        # Stores the starting positions of all suffixes passing through node
         self.positions = []
 
 
@@ -236,7 +237,7 @@ class SuffixTrie:
         matches = set()
 
         def dfs(node: SuffixTrieNode, pattern_idx: int, mismatches_left: int):
-            # If we've reached the end of the pattern, it's a valid match!
+            # If we've reached the end of the pattern, it's a valid match
             if pattern_idx == len(pattern):
                 for pos in node.positions:
                     matches.add(pos)
@@ -244,7 +245,7 @@ class SuffixTrie:
 
             target_char = pattern[pattern_idx]
 
-            # Explore children nodes using Depth-First-Search
+            # Explore child nodes using Depth-First-Search
             for child_char, child_node in node.children.items():
                 if child_char == target_char:
                     # Exact match for this character
@@ -271,7 +272,7 @@ def main(args):
     # Prepare for output
     with open(args.output, 'w') as outfile:
         # Write column headers
-        outfile.write("Header\tPosition\n")
+        outfile.write("Pattern\tHeader\tPosition\n")
 
         total_matches = 0
 
@@ -298,9 +299,9 @@ def main(args):
                     args.allowed_mismatches
                 )
 
-            # Log the matches to the TSV file
+            # Write the matches to the TSV file
             for match_pos in matches:
-                outfile.write(f"{entry.header}\t{match_pos}\n")
+                outfile.write(f"{args.pattern}\t{entry.header}\t{match_pos}\n")
                 total_matches += 1
 
     print(
@@ -311,13 +312,18 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Read a Multi-FASTA file to find all occurrences of a pattern."
+        description="Read a Multi-FASTA file to find all occurrences of a "
+                    "pattern."
     )
 
     # Positional Arguments
-    parser.add_argument("input", type=str, help="Input FASTA file")
-    parser.add_argument("pattern", type=str, help="Pattern to search for")
-    parser.add_argument("output", type=str, help="Output TSV")
+    parser.add_argument(
+        "input", type=str, help="Input FASTA file")
+    parser.add_argument(
+        "pattern", type=str, help="Pattern to search for"
+    )
+    parser.add_argument(
+        "output", type=str, help="Output TSV")
 
     # Optional Arguments
     parser.add_argument(
@@ -336,10 +342,6 @@ if __name__ == "__main__":
         help="Build and use a naive Suffix Trie for matching."
     )
 
+    # Read the arguments passed by the user and call the main function
     parsed_args = parser.parse_args()
     main(parsed_args)
-
-if __name__ == "__main__":
-    # Read the arguments passed by the user and call the main function
-    args = parser.parse_args()
-    main(args)
