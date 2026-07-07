@@ -6,7 +6,7 @@ import os
 import gzip
 
 __author__ = "Falk, 8819989"
-__version__ = "0.5.0"
+__version__ = "1.0.0"
 
 # Declare the parser at module level as given by the template
 parser = argparse.ArgumentParser(
@@ -272,15 +272,15 @@ def main(args):
 
     labels = [entry.header for entry in entries]
 
-    # Problem 1: Build Distance Matrix and output to console
+    # Output Problem 1: Build Distance Matrix and output to console
     dist_matrix = compute_distance_matrix(entries)
     print_matrix(dist_matrix, labels)
 
-    # Problem 2: Perform UPGMA clustering to build tree topology
+    # Output Problem 2: Perform UPGMA clustering to build tree topology
     newick_tree = run_upgma(dist_matrix, labels)
     print(f"Generated Newick Tree:\n{newick_tree}\n")
 
-    # Problem 3: Store tree in correct format
+    # Output Problem 3: Store tree in correct format
     with open(args.output, 'w') as out_f:
         out_f.write(newick_tree + "\n")
 
